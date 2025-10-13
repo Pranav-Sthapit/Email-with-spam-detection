@@ -1,0 +1,11 @@
+/* Import Aldrich and Alegreya Sans from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Alegreya+Sans:wght@400;700&display=swap');
+
+
+
+/* tailwind.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+

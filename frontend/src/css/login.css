@@ -1,0 +1,46 @@
+.centerWrapper {
+  @apply flex justify-center items-center w-full h-screen bg-gray-100;
+}
+
+/* Shrink-wrapped card container */
+.box {
+  @apply w-[400px] bg-box_bg shadow-2xl rounded-lg text-text_clr font-semibold font-aldrich;
+}
+.formContainer {
+  @apply flex flex-col gap-2 p-10;
+}
+
+/* Heading styles */
+.heading {
+  @apply text-2xl p-4 h-[60px] font-bold text-center text-white bg-primary font-aldrich rounded-t-lg border-gray-500;
+}
+
+/* Form wrapper */
+
+/* Label styling */
+.label {
+  @apply text-base font-medium text-center text-gray-700;
+}
+
+/* Input fields */
+.normalInput,
+.passwordInput {
+  @apply border border-gray-300 rounded-md px-3 py-2 text-sm pl-10 font-medium
+         focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+}
+
+.fileInput {
+  @apply border border-gray-300 rounded-md px-3 py-2 text-sm font-medium
+         bg-white text-gray-700 cursor-pointer
+         focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+}
+
+.fileInput::file-selector-button {
+  @apply mr-4 px-3 py-1 rounded-md border border-gray-300 
+         bg-gray-100 text-gray-700 text-sm cursor-pointer
+         hover:bg-gray-200 transition-colors;
+}
+
+.okButton {
+  @apply text-center bg-primary text-white px-4 py-2 rounded-full font-aldrich hover:bg-[#90c7ff] transition-colors;
+}
