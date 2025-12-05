@@ -50,7 +50,8 @@ export default function Login() {
         localStorage.setItem("keys", JSONbig.stringify(keyDetail));
         localStorage.setItem("userId",response.data.userId);
       }else{
-        alert(response.data.message);
+        document.getElementById("authenticationMsg").style.display="inline";
+        // alert(response.data.message);
       }
     }catch(error){
       console.error("error in sending data:", error);
@@ -90,7 +91,7 @@ export default function Login() {
               required
             />
           </div>
-
+            <label className="label" style={{display:"none",color:"red"}} id="authenticationMsg">Invalid Email or Password</label>
           <br/>
           <a href="" className="text-secondary text-sm text-right hover:underline" onClick={()=>navigate("/forget")}>Forget Password</a>
           {/* Button */}

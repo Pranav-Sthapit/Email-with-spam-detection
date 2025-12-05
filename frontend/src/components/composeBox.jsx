@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { getFileIcon } from "./maildetail";
 import axios from "axios";
 import { encryptString } from "../crypto/crypto.js";
-
+import MessageBox from "./messageBox.jsx";
 export default function ComposeButton({ setNavExpanded }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -43,6 +43,10 @@ export default function ComposeButton({ setNavExpanded }) {
 }
 
 export function ComposeBox({ messageData, onClose, onHover }) {
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState(null);
+  const [alertColor, setAlertColor] = useState(null);
+
   // States
   const [attachments, setAttachments] = useState([]);
   const [to, setTo] = useState("");
@@ -164,8 +168,30 @@ export function ComposeBox({ messageData, onClose, onHover }) {
           },
         }
       );
-      alert(response.data.message);
-      if (response.data.unregistered_cc) alert(response.data.unregistered_cc);
+
+      //customized alert
+      var tempMsg = response.data.message;
+      if (response.data.unregistered_cc) {
+        tempMsg += " " + response.data.unregistered_cc;
+      }
+      if (response.data.status === 200) setAlertColor("text-green-500");
+      else setAlertColor("text-red-500");
+
+      setAlertMessage(tempMsg);
+      setAlertVisible(true);
+      //end
+
+      if (response.data.status == 200) {
+        await new Promise((resolve) => {
+          const interval = setInterval(() => {
+            if (!alertVisible) {
+              clearInterval(interval);
+              resolve();
+            }
+          }, 6500); // check every 6.5s
+        });
+        onClose();
+      }
     } catch (error) {
       console.error("error in sending data", error);
     }
@@ -176,6 +202,12 @@ export function ComposeBox({ messageData, onClose, onHover }) {
       onMouseEnter={onHover}
       className="fixed bottom-10 right-10 border border-gray-400 rounded-lg w-[600px] bg-box_bg"
     >
+      <MessageBox
+        visible={alertVisible}
+        message={alertMessage}
+        color={alertColor}
+        onClose={() => setAlertVisible(false)}
+      ></MessageBox>
       <div className="flex items-center justify-between bg-[#aed4ff] font-aldrich px-4 py-2 border-b border-black rounded-t-lg">
         <h1 className="text-lg font-semibold">New Message</h1>
         <button

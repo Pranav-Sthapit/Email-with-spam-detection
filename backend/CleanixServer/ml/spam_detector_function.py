@@ -78,12 +78,11 @@ def predict_the_mail(data_dict):
     x_numeric=email_scaler.transform(numeric_features)
 
     x = hstack([x_from, x_sub, x_body, x_domain, x_numeric,has_url])
-    result=email_model.predict(x)
+    
 
-    if result==1:
-        return True
-    else:
-        return False
+    prob=email_model.predict_proba(x)[0][1]
+    
+    return prob
 
 def predict_the_url(url_dict):
     #for url
@@ -105,12 +104,11 @@ def predict_the_url(url_dict):
     x_numeric=url_scaler.transform(numeric_features)
 
     x = hstack([x_URL, x_dom, x_subDom, x_TLD,x_path, x_numeric])
-    result=url_model.predict(x)
+    
+    prob=url_model.predict_proba(x)[0][1]
+    
 
-    if result==1:
-        return True
-    else:
-        return False
+    return prob
 
 def predict_by_message(message):
     model=joblib.load(os.path.join(BASE_DIR,"rf_model.pkl"))
@@ -122,10 +120,9 @@ def predict_by_message(message):
     message_transformed = vectorizer.transform(message)
     result=model.predict(message_transformed)
 
-    if result[0]==1:
-        return False
-    else:
-        return True
+    prob=model.predict_proba(message_transformed)[0][1]
+    
+    return (1-prob)
 
 def combined_spam_result(_from,cc,subject,message):
     data_dict=convert_for_prediction(_from,cc,subject,message)
@@ -133,19 +130,25 @@ def combined_spam_result(_from,cc,subject,message):
 
     first_analysis=predict_the_mail(data_dict)
 
-    second_analysis=False
+    second_analysis=0
 
     if url_list:
         for url_dict in url_list:
-            temp_analysis=predict_the_url(url_dict)
-            if temp_analysis==True:
-                second_analysis=True
-                break
+            temp=predict_the_url(url_dict)
+            if(temp>second_analysis):
+                second_analysis=temp
+
 
     third_analysis=predict_by_message(message)
-    #if either one of them predicts spam
-    if(first_analysis or second_analysis or third_analysis):
-        return True
+
+    #threshhold values for three classification
+    if(first_analysis>=0.8 or second_analysis>=0.8 or third_analysis>=0.8):
+        return "Hazardous"
+    elif(first_analysis>=0.65 or second_analysis>=0.65 or third_analysis>=0.65):
+        return "Cautious"
     else:
-        return False
+        return "Safe"
+    
+    
+    
 

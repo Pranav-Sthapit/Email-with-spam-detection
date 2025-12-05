@@ -54,10 +54,10 @@ def put_send_mail(request):
     try:
         receiver=User.objects.get(email=to)
     except User.DoesNotExist:
-        return Response({"message":f"Recipient {to} not registered"})
+        return Response({"message":f"Recipient {to} not registered","status":504})
     
     if receiver.id==sender_id:
-        return Response({"message":"cannot send to self"})
+        return Response({"message":"cannot send to self","status":504})
 
     #check if cc exist
     available_cc=[]
@@ -71,11 +71,19 @@ def put_send_mail(request):
             unavailable_cc.append(email)
 
     _from=User.objects.get(id=sender_id).email
-    spam=combined_spam_result(_from,available_cc,subject,message)
+
+    spam_state=combined_spam_result(_from,available_cc,subject,message)
+    
+    if(spam_state=="Hazardous"):
+        return Response({"message":"Spam has been detected so this mail will not be sends try others","status":504})
+    elif(spam_state=="Cautious"):
+        spam=True
+    else:
+        spam=False
 
 
     store_message(message,subject,sender_id,receiver.id,files,spam)
-    response_data={"message":"Message sent successfully"}
+    response_data={"message":"Message sent successfully","status":200}
 
     if sender_id in available_cc:
         response_data["message"]+=" but cannot CC to self"

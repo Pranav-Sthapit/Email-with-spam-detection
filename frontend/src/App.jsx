@@ -8,11 +8,17 @@ import UserMails from './admin_components/usermails';
 import FullMailDetail from './admin_components/fullmaildetail';
 import { Routes, Route } from "react-router-dom";
 import AdminLogin from './admin_components/adminlogin';
+import Landing from './components/landing';
+import { useState } from 'react';
+
+
+
 
 export default function App(){
   return(
   <Routes>
-    <Route path="/" element={<SignInUp/>}/>
+    <Route path="/" element={<Landing/>}/>
+    <Route path="/sign" element={<SignInUp/>}/>
     <Route path="/forget" element={<Forget/>}/>
     <Route path="/home" element={<Home/>}/>
     <Route path="/settings" element={<Settings/>}/>

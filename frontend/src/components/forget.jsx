@@ -37,7 +37,7 @@ export default function Forget() {
           password,
         });
         alert(res.data.message);
-        navigate("/");
+        navigate("/sing");
       } catch (err) {
         console.error("unable to send data", err);
       }

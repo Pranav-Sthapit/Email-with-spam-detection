@@ -9,7 +9,7 @@ export default function Settings() {
   const [contactUs,setContactUs]=useState(false);
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/");
+    navigate("/sign");
     setSelectedButton("logout"); // highlight logout button
   };
 
